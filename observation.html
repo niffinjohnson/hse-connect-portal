@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Safety Observation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-box {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+    }
+
+    select, textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #145ca3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Safety Observation</h2>
+
+  <div class="form-box">
+
+    <label>Observation Type *</label>
+    <select required>
+      <option value="">Select</option>
+      <option>Unsafe Condition</option>
+      <option>Unsafe Act</option>
+      <option>Near Miss</option>
+      <option>Good Practice</option>
+    </select>
+
+    <label>Description *</label>
+    <textarea placeholder="Describe what you observed..." required></textarea>
+
+    <label>Location / Area *</label>
+    <input type="text" placeholder="e.g. Plant 3 – Press Area" required>
+
+    <label>Department / Contractor *</label>
+    <input type="text" placeholder="Department or contractor name" required>
+
+    <label>Risk Level *</label>
+    <select required>
+      <option value="">Select</option>
+      <option>Low</option>
+      <option>Medium</option>
+      <option>High</option>
+    </select>
+
+    <label>Immediate Action Taken?</label>
+    <select>
+      <option>No</option>
+      <option>Yes</option>
+    </select>
+
+    <button class="btn">Submit Observation</button>
+
+  </div>
+
+</body>
+</html>
