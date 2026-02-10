@@ -14,12 +14,12 @@
       font-family: Arial, sans-serif;
       background: #f4f6f8;
       padding: 20px;
-      display: none; /* 🔒 Hide until auth confirmed */
+      display: none; /* hidden until auth check */
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     .top-bar {
@@ -56,6 +56,41 @@
       background: #e3f2fd;
     }
   </style>
+
+  <script>
+    // 🔐 FIREBASE CONFIGURATION
+    // ⚠️ REPLACE THESE VALUES WITH THE SAME ONES FROM index.html
+    const firebaseConfig = {
+      apiKey: "PASTE_YOUR_API_KEY",
+      authDomain: "PASTE_YOUR_AUTH_DOMAIN",
+      projectId: "PASTE_YOUR_PROJECT_ID",
+      storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
+      messagingSenderId: "PASTE_YOUR_MESSAGING_ID",
+      appId: "PASTE_YOUR_APP_ID"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    const auth = firebase.auth();
+
+    // 🔒 Protect dashboard
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.replace("index.html");
+      } else {
+        document.body.style.display = "block";
+      }
+    });
+
+    // 🚪 Logout
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.replace("index.html");
+      });
+    }
+  </script>
 </head>
 
 <body>
@@ -67,46 +102,24 @@
   <h2>HSE Connect</h2>
 
   <div class="grid">
+
     <div class="card" onclick="window.location.href='observation.html'">
-  📸<br><br>Safety Observation
-</div>
-    <div class="card">🛠️<br><br>Work Permit</div>
-    <div class="card">💡<br><br>Safety Tip of the Day</div>
+      📸<br><br>Safety Observation
+    </div>
+
+    <div class="card" onclick="window.location.href='view-observations.html'">
+      📋<br><br>View Observations
+    </div>
+
+    <div class="card">
+      🛠️<br><br>Work Permit
+    </div>
+
+    <div class="card">
+      💡<br><br>Safety Tip of the Day
+    </div>
+
   </div>
-
-  <script>
-    // 🔐 Firebase config (COPY EXACTLY FROM index.html)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
-  authDomain: "hse-connect-5b0a3.firebaseapp.com",
-  projectId: "hse-connect-5b0a3",
-  storageBucket: "hse-connect-5b0a3.firebasestorage.app",
-  messagingSenderId: "1017230242361",
-  appId: "1:1017230242361:web:66d427e171595aae5c53e8",
-  measurementId: "G-2GGKDEJTKW"
-    };
-
-    // 🔁 Initialise Firebase ONCE
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    // 🔒 Auth guard
-    auth.onAuthStateChanged(function (user) {
-      if (!user) {
-        window.location.replace("index.html");
-      } else {
-        document.body.style.display = "block"; // show dashboard
-        console.log("Authenticated:", user.email);
-      }
-    });
-
-    // 🚪 Logout
-    function logout() {
-      auth.signOut().then(() => {
-        window.location.replace("index.html");
-      });
-    }
-  </script>
 
 </body>
 </html>
