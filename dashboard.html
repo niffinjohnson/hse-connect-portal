@@ -64,9 +64,23 @@
 </head>
 
 <body>
-<div style="text-align:right; margin-bottom:20px;">
-  <button onclick="logout()">Logout</button>
+<div style="
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:20px;
+">
+  <button onclick="logout()" style="
+    padding:8px 14px;
+    background:#d32f2f;
+    color:white;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+  ">
+    Logout
+  </button>
 </div>
+
 
   <h2>HSE Connect</h2>
 
@@ -90,6 +104,5 @@
     });
   }
 </script>
-
 </body>
 </html>
