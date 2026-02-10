@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HSE Connect – Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
-  authDomain: "hse-connect-5b0a3.firebaseapp.com",
-  projectId: "hse-connect-5b0a3",
-  storageBucket: "hse-connect-5b0a3.firebasestorage.app",
-  messagingSenderId: "1017230242361",
-  appId: "1:1017230242361:web:66d427e171595aae5c53e8",
-  measurementId: "G-2GGKDEJTKW"
-  };
+  // 🔐 Prevent multiple initializations
+  if (!firebase.apps.length) {
+    firebase.initializeApp({
+      apiKey: "YOUR_REAL_API_KEY",
+      authDomain: "YOUR_REAL_AUTH_DOMAIN",
+      projectId: "YOUR_REAL_PROJECT_ID",
+      storageBucket: "YOUR_REAL_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_REAL_MESSAGING_ID",
+      appId: "YOUR_REAL_APP_ID"
+    });
+  }
 
-  firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
 
-  auth.onAuthStateChanged((user) => {
+  // 🔒 Force auth check AFTER Firebase fully loads
+  auth.onAuthStateChanged(function (user) {
     if (!user) {
-      window.location.href = "index.html";
+      console.log("No user session — redirecting to login");
+      window.location.replace("index.html");
+    } else {
+      console.log("User authenticated:", user.email);
     }
   });
 </script>
