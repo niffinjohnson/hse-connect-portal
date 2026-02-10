@@ -21,14 +21,15 @@
   const auth = firebase.auth();
 
   // 🔒 Force auth check AFTER Firebase fully loads
-  auth.onAuthStateChanged(function (user) {
-    if (!user) {
-      console.log("No user session — redirecting to login");
-      window.location.replace("index.html");
-    } else {
-      console.log("User authenticated:", user.email);
-    }
-  });
+ auth.onAuthStateChanged(function (user) {
+  if (!user) {
+    window.location.replace("index.html");
+  } else {
+    // Show dashboard only after auth confirmed
+    document.body.style.display = "block";
+    console.log("User authenticated:", user.email);
+  }
+});
 </script>
 
     body {
@@ -63,7 +64,7 @@
   </style>
 </head>
 
-<body>
+<body style="display:none;">
 <div style="
   display:flex;
   justify-content:flex-end;
