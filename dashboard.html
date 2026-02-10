@@ -64,6 +64,9 @@
 </head>
 
 <body>
+<div style="text-align:right; margin-bottom:20px;">
+  <button onclick="logout()">Logout</button>
+</div>
 
   <h2>HSE Connect</h2>
 
@@ -80,6 +83,13 @@
       💡<br><br>Safety Tip of the Day
     </div>
   </div>
+<script>
+  function logout() {
+    firebase.auth().signOut().then(() => {
+      window.location.replace("index.html");
+    });
+  }
+</script>
 
 </body>
 </html>
