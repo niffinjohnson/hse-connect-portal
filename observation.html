@@ -5,6 +5,11 @@
   <title>Safety Observation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -61,6 +66,27 @@
       background: #145ca3;
     }
   </style>
+
+  <script>
+    // 🔐 Firebase configuration (PASTE YOUR REAL VALUES HERE)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
+  authDomain: "hse-connect-5b0a3.firebaseapp.com",
+  projectId: "hse-connect-5b0a3",
+  storageBucket: "hse-connect-5b0a3.firebasestorage.app",
+  messagingSenderId: "1017230242361",
+  appId: "1:1017230242361:web:66d427e171595aae5c53e8",
+  measurementId: "G-2GGKDEJTKW"
+    };
+
+    // Initialize Firebase only once
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  </script>
 </head>
 
 <body>
@@ -70,7 +96,7 @@
   <div class="form-box">
 
     <label>Observation Type *</label>
-    <select required>
+    <select id="type" required>
       <option value="">Select</option>
       <option>Unsafe Condition</option>
       <option>Unsafe Act</option>
@@ -79,16 +105,16 @@
     </select>
 
     <label>Description *</label>
-    <textarea placeholder="Describe what you observed..." required></textarea>
+    <textarea id="description" placeholder="Describe what you observed..." required></textarea>
 
     <label>Location / Area *</label>
-    <input type="text" placeholder="e.g. Plant 3 – Press Area" required>
+    <input type="text" id="location" placeholder="e.g. Plant 3 – Press Area" required>
 
     <label>Department / Contractor *</label>
-    <input type="text" placeholder="Department or contractor name" required>
+    <input type="text" id="department" placeholder="Department or contractor name" required>
 
     <label>Risk Level *</label>
-    <select required>
+    <select id="risk" required>
       <option value="">Select</option>
       <option>Low</option>
       <option>Medium</option>
@@ -96,14 +122,57 @@
     </select>
 
     <label>Immediate Action Taken?</label>
-    <select>
+    <select id="action">
       <option>No</option>
       <option>Yes</option>
     </select>
 
-    <button class="btn">Submit Observation</button>
+    <button class="btn" onclick="submitObservation()">Submit Observation</button>
 
   </div>
+
+  <script>
+    function submitObservation() {
+      const user = auth.currentUser;
+
+      if (!user) {
+        alert("You are not logged in.");
+        return;
+      }
+
+      const type = document.getElementById("type").value;
+      const description = document.getElementById("description").value;
+      const location = document.getElementById("location").value;
+      const department = document.getElementById("department").value;
+      const risk = document.getElementById("risk").value;
+      const action = document.getElementById("action").value;
+
+      if (!type || !description || !location || !department || !risk) {
+        alert("Please fill all mandatory fields.");
+        return;
+      }
+
+      const data = {
+        type: type,
+        description: description,
+        location: location,
+        department: department,
+        riskLevel: risk,
+        immediateAction: action,
+        submittedBy: user.email,
+        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      db.collection("safety_observations")
+        .add(data)
+        .then(() => {
+          alert("Observation submitted successfully");
+        })
+        .catch((error) => {
+          alert("Error submitting observation: " + error.message);
+        });
+    }
+  </script>
 
 </body>
 </html>
