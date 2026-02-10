@@ -1,33 +1,12 @@
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
-<script>
-  // 🔐 Your Firebase configuration
-  const firebaseConfig = {
-    apiKey: "PASTE_YOUR_API_KEY",
-    authDomain: "PASTE_YOUR_AUTH_DOMAIN",
-    projectId: "PASTE_YOUR_PROJECT_ID",
-    storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
-    messagingSenderId: "PASTE_YOUR_MESSAGING_ID",
-    appId: "PASTE_YOUR_APP_ID"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-
-  function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    auth.signInWithEmailAndPassword(email, password)
-      .then(() => {
-        alert("Login successful!");
-        // dashboard.html will come next
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-  }
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HSE Connect Test</title>
+</head>
+<body style="background: yellow;">
+  <h1 style="color: red; font-size: 40px;">
+    PAGE IS LOADING
+  </h1>
+  <p>If you see this, GitHub Pages is working.</p>
+</body>
+</html>
