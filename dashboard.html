@@ -1,110 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>HSE Portal – Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HSE Portal</title>
 
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background: #f4f6f8;
-      padding: 20px;
+      text-align: center;
+      padding: 30px;
       display: none;
     }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .top-bar {
+    .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .role-badge {
-      font-weight: bold;
-      background: #1976d2;
-      color: white;
-      padding: 6px 10px;
-      border-radius: 4px;
-    }
-
-    .logout-btn {
-      padding: 8px 14px;
-      background: #d32f2f;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 20px;
     }
 
     .card {
       background: white;
-      padding: 25px;
-      text-align: center;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      width: 250px;
       cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .card:hover {
       background: #e3f2fd;
     }
+
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .logout {
+      background: red;
+      color: white;
+    }
   </style>
 
   <script>
-    // 🔐 REPLACE WITH YOUR FIREBASE CONFIG VALUES
     const firebaseConfig = {
       apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
-  authDomain: "hse-connect-5b0a3.firebaseapp.com",
-  projectId: "hse-connect-5b0a3",
-  storageBucket: "hse-connect-5b0a3.firebasestorage.app",
-  messagingSenderId: "1017230242361",
-  appId: "1:1017230242361:web:66d427e171595aae5c53e8",
-  measurementId: "G-2GGKDEJTKW"
+      authDomain: "hse-connect-5b0a3.firebaseapp.com",
+      projectId: "hse-connect-5b0a3",
+      storageBucket: "hse-connect-5b0a3.firebasestorage.app",
+      messagingSenderId: "1017230242361",
+      appId: "1:1017230242361:web:66d427e171595aae5c53e8",
+      measurementId: "G-2GGKDEJTKW"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+    firebase.initializeApp(firebaseConfig);
 
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    let currentUserRole = null;
-
     auth.onAuthStateChanged(async (user) => {
       if (!user) {
         window.location.replace("index.html");
-      } else {
-        const doc = await db.collection("users").doc(user.email).get();
-
-        if (!doc.exists) {
-          alert("No role assigned. Contact Admin.");
-          auth.signOut();
-          return;
-        }
-
-        currentUserRole = doc.data().role;
-        document.getElementById("roleDisplay").innerText = currentUserRole;
-
-        document.body.style.display = "block";
+        return;
       }
+
+      const doc = await db.collection("users").doc(user.email).get();
+
+      if (!doc.exists) {
+        alert("No role assigned.");
+        auth.signOut();
+        return;
+      }
+
+      const role = doc.data().role;
+      document.getElementById("roleDisplay").innerText = role;
+
+      // Contractor restrictions
+      if (role === "Contractor") {
+        document.getElementById("obs-card").style.display = "none";
+        document.getElementById("view-card").style.display = "none";
+      }
+
+      document.body.style.display = "block";
     });
 
     function logout() {
@@ -117,29 +103,27 @@
 
 <body>
 
-  <div class="top-bar">
-    <div>
-      Role: <span id="roleDisplay" class="role-badge"></span>
-    </div>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="topbar">
+    <div>Role: <b id="roleDisplay"></b></div>
+    <button class="logout" onclick="logout()">Logout</button>
   </div>
 
-  <h2>HSE Portal</h2>
+  <h1>HSE Portal</h1>
 
-  <div class="grid">
+  <div id="obs-card" class="card" onclick="location.href='observation.html'">
+    📷 Safety Observation
+  </div>
 
-    <div class="card" onclick="window.location.href='observation.html'">
-      📸<br><br>Safety Observation
-    </div>
+  <div id="view-card" class="card" onclick="location.href='view-observations.html'">
+    📋 View Observations
+  </div>
 
-    <div class="card" onclick="window.location.href='view-observations.html'">
-      📋<br><br>View Observations
-    </div>
+  <div class="card" onclick="location.href='permit.html'">
+    🛠 Work Permit
+  </div>
 
-    <div class="card" onclick="window.location.href='hot-work-permit.html'">
-      🛠️<br><br>Work Permit
-    </div>
-
+  <div class="card" onclick="location.href='safety-tip.html'">
+    💡 Safety Tip of the Day
   </div>
 
 </body>
