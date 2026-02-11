@@ -2,19 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>HSE Connect – Dashboard</title>
+  <title>HSE Portal – Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f4f6f8;
       padding: 20px;
-      display: none; /* hidden until auth check */
+      display: none;
     }
 
     h2 {
@@ -24,8 +25,17 @@
 
     .top-bar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 20px;
+    }
+
+    .role-badge {
+      font-weight: bold;
+      background: #1976d2;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
     }
 
     .logout-btn {
@@ -58,8 +68,7 @@
   </style>
 
   <script>
-    // 🔐 FIREBASE CONFIGURATION
-    // ⚠️ REPLACE THESE VALUES WITH THE SAME ONES FROM index.html
+    // 🔐 REPLACE WITH YOUR FIREBASE CONFIG VALUES
     const firebaseConfig = {
       apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
   authDomain: "hse-connect-5b0a3.firebaseapp.com",
@@ -75,17 +84,29 @@
     }
 
     const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    // 🔒 Protect dashboard
-    auth.onAuthStateChanged((user) => {
+    let currentUserRole = null;
+
+    auth.onAuthStateChanged(async (user) => {
       if (!user) {
         window.location.replace("index.html");
       } else {
+        const doc = await db.collection("users").doc(user.email).get();
+
+        if (!doc.exists) {
+          alert("No role assigned. Contact Admin.");
+          auth.signOut();
+          return;
+        }
+
+        currentUserRole = doc.data().role;
+        document.getElementById("roleDisplay").innerText = currentUserRole;
+
         document.body.style.display = "block";
       }
     });
 
-    // 🚪 Logout
     function logout() {
       auth.signOut().then(() => {
         window.location.replace("index.html");
@@ -97,10 +118,13 @@
 <body>
 
   <div class="top-bar">
+    <div>
+      Role: <span id="roleDisplay" class="role-badge"></span>
+    </div>
     <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
-  <h2>HSE Connect</h2>
+  <h2>HSE Portal</h2>
 
   <div class="grid">
 
@@ -112,12 +136,8 @@
       📋<br><br>View Observations
     </div>
 
-    <div class="card">
+    <div class="card" onclick="window.location.href='hot-work-permit.html'">
       🛠️<br><br>Work Permit
-    </div>
-
-    <div class="card">
-      💡<br><br>Safety Tip of the Day
     </div>
 
   </div>
