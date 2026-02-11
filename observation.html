@@ -113,12 +113,6 @@
       query.get().then((snapshot) => {
         snapshot.forEach((doc) => {
           const d = doc.data();
-
-          // 🔒 Department filtering
-          if (role === "Department" && d.department !== userDepartment) {
-            return;
-          }
-
           const row = document.createElement("tr");
           row.onclick = () => showDetails(d);
 
