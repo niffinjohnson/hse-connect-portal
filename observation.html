@@ -2,17 +2,61 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>View Observations</title>
+  <title>Safety Observation</title>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
-    body { font-family: Arial; padding: 20px; display:none; }
-    table { width:100%; border-collapse: collapse; }
-    th, td { padding:10px; border:1px solid #ddd; }
-    th { background:#1976d2; color:white; }
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      padding: 30px;
+      display: none;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .form-box {
+      background: white;
+      padding: 25px;
+      max-width: 600px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #125aa0;
+    }
   </style>
 
   <script>
@@ -31,6 +75,8 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    let currentUserRole = null;
+
     auth.onAuthStateChanged(async (user) => {
       if (!user) {
         window.location.replace("index.html");
@@ -45,37 +91,45 @@
         return;
       }
 
-      const role = doc.data().role;
+      currentUserRole = doc.data().role;
 
-      if (role === "Contractor") {
+      // 🚫 Contractors cannot access observation page
+      if (currentUserRole === "Contractor") {
         alert("Access denied.");
         window.location.replace("dashboard.html");
         return;
       }
 
-      loadObservations();
       document.body.style.display = "block";
     });
 
-    function loadObservations() {
-      db.collection("safety_observations")
-        .orderBy("submittedAt", "desc")
-        .get()
-        .then(snapshot => {
-          const tbody = document.getElementById("obs-body");
-          tbody.innerHTML = "";
+    function submitObservation() {
+      const user = auth.currentUser;
 
-          snapshot.forEach(doc => {
-            const d = doc.data();
-            tbody.innerHTML += `
-              <tr>
-                <td>${d.location || "-"}</td>
-                <td>${d.department || "-"}</td>
-                <td>${d.riskLevel || "-"}</td>
-                <td>${d.submittedBy || "-"}</td>
-              </tr>
-            `;
-          });
+      const data = {
+        type: document.getElementById("type").value,
+        description: document.getElementById("description").value,
+        location: document.getElementById("location").value,
+        department: document.getElementById("department").value,
+        riskLevel: document.getElementById("risk").value,
+        immediateAction: document.getElementById("action").value,
+        submittedBy: user.email,
+        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      if (!data.type || !data.description || !data.location || !data.department || !data.riskLevel) {
+        alert("Please fill all required fields.");
+        return;
+      }
+
+      db.collection("safety_observations")
+        .add(data)
+        .then(() => {
+          alert("Observation submitted successfully.");
+          document.getElementById("obs-form").reset();
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
         });
     }
   </script>
@@ -83,19 +137,43 @@
 
 <body>
 
-<h2>Safety Observations</h2>
+  <h2>Safety Observation</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>Location</th>
-      <th>Department</th>
-      <th>Risk</th>
-      <th>Reported By</th>
-    </tr>
-  </thead>
-  <tbody id="obs-body"></tbody>
-</table>
+  <div class="form-box">
+    <form id="obs-form">
+
+      <label>Observation Type *</label>
+      <select id="type">
+        <option value="">Select</option>
+        <option>Unsafe Act</option>
+        <option>Unsafe Condition</option>
+        <option>Near Miss</option>
+      </select>
+
+      <label>Description *</label>
+      <textarea id="description"></textarea>
+
+      <label>Location *</label>
+      <input type="text" id="location">
+
+      <label>Department *</label>
+      <input type="text" id="department">
+
+      <label>Risk Level *</label>
+      <select id="risk">
+        <option value="">Select</option>
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+      </select>
+
+      <label>Immediate Action Taken</label>
+      <textarea id="action"></textarea>
+
+      <button type="button" onclick="submitObservation()">Submit Observation</button>
+
+    </form>
+  </div>
 
 </body>
 </html>
