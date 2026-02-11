@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Safety Observation</title>
+  <title>View Safety Observations</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Firebase SDKs -->
@@ -15,6 +15,7 @@
       font-family: Arial, sans-serif;
       background: #f4f6f8;
       padding: 20px;
+      display: none;
     }
 
     h2 {
@@ -22,55 +23,44 @@
       margin-bottom: 20px;
     }
 
-    .form-box {
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    label {
-      font-weight: bold;
-      margin-top: 15px;
-      display: block;
-    }
-
-    select, textarea, input {
+    table {
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      border-collapse: collapse;
+      background: #fff;
     }
 
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    .btn {
-      margin-top: 20px;
-      width: 100%;
+    th, td {
       padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
       background: #1976d2;
       color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
+    }
+
+    tr:hover {
+      background: #f1f1f1;
       cursor: pointer;
     }
 
-    .btn:hover {
-      background: #145ca3;
+    .details {
+      background: #ffffff;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .label {
+      font-weight: bold;
     }
   </style>
 
   <script>
-    // 🔐 Firebase configuration (PASTE YOUR REAL VALUES HERE)
     const firebaseConfig = {
-      apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
+     apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
   authDomain: "hse-connect-5b0a3.firebaseapp.com",
   projectId: "hse-connect-5b0a3",
   storageBucket: "hse-connect-5b0a3.firebasestorage.app",
@@ -79,100 +69,110 @@
   measurementId: "G-2GGKDEJTKW"
     };
 
-    // Initialize Firebase only once
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
 
     const auth = firebase.auth();
     const db = firebase.firestore();
+
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.replace("index.html");
+      } else {
+
+        const userDoc = await db.collection("users").doc(user.email).get();
+
+        if (!userDoc.exists) {
+          alert("No role assigned.");
+          auth.signOut();
+          return;
+        }
+
+        const role = userDoc.data().role;
+        const userDepartment = userDoc.data().department;
+
+        if (role === "Contractor") {
+          alert("Access denied.");
+          window.location.replace("dashboard.html");
+          return;
+        }
+
+        loadObservations(role, userDepartment);
+        document.body.style.display = "block";
+      }
+    });
+
+    function loadObservations(role, userDepartment) {
+
+      const tableBody = document.getElementById("obs-body");
+      tableBody.innerHTML = "";
+
+      let query = db.collection("safety_observations").orderBy("submittedAt", "desc");
+
+      query.get().then((snapshot) => {
+        snapshot.forEach((doc) => {
+          const d = doc.data();
+
+          // 🔒 Department filtering
+          if (role === "Department" && d.department !== userDepartment) {
+            return;
+          }
+
+          const row = document.createElement("tr");
+          row.onclick = () => showDetails(d);
+
+          row.innerHTML = `
+            <td>${d.location || "-"}</td>
+            <td>${d.department || "-"}</td>
+            <td>${d.riskLevel || "-"}</td>
+            <td>${d.submittedBy || "-"}</td>
+          `;
+
+          tableBody.appendChild(row);
+        });
+      });
+    }
+
+    function showDetails(d) {
+      document.getElementById("details").style.display = "block";
+      document.getElementById("d-type").innerText = d.type || "-";
+      document.getElementById("d-desc").innerText = d.description || "-";
+      document.getElementById("d-location").innerText = d.location || "-";
+      document.getElementById("d-dept").innerText = d.department || "-";
+      document.getElementById("d-risk").innerText = d.riskLevel || "-";
+      document.getElementById("d-action").innerText = d.immediateAction || "-";
+      document.getElementById("d-by").innerText = d.submittedBy || "-";
+    }
   </script>
 </head>
 
 <body>
 
-  <h2>Safety Observation</h2>
+  <h2>Safety Observations</h2>
 
-  <div class="form-box">
+  <table>
+    <thead>
+      <tr>
+        <th>Location</th>
+        <th>Department</th>
+        <th>Risk</th>
+        <th>Reported By</th>
+      </tr>
+    </thead>
+    <tbody id="obs-body"></tbody>
+  </table>
 
-    <label>Observation Type *</label>
-    <select id="type" required>
-      <option value="">Select</option>
-      <option>Unsafe Condition</option>
-      <option>Unsafe Act</option>
-      <option>Near Miss</option>
-      <option>Good Practice</option>
-    </select>
-
-    <label>Description *</label>
-    <textarea id="description" placeholder="Describe what you observed..." required></textarea>
-
-    <label>Location / Area *</label>
-    <input type="text" id="location" placeholder="e.g. Plant 3 – Press Area" required>
-
-    <label>Department / Contractor *</label>
-    <input type="text" id="department" placeholder="Department or contractor name" required>
-
-    <label>Risk Level *</label>
-    <select id="risk" required>
-      <option value="">Select</option>
-      <option>Low</option>
-      <option>Medium</option>
-      <option>High</option>
-    </select>
-
-    <label>Immediate Action Taken?</label>
-    <select id="action">
-      <option>No</option>
-      <option>Yes</option>
-    </select>
-
-    <button class="btn" onclick="submitObservation()">Submit Observation</button>
-
+  <div id="details" class="details">
+    <h3>Observation Details</h3>
+    <p><span class="label">Type:</span> <span id="d-type"></span></p>
+    <p><span class="label">Description:</span> <span id="d-desc"></span></p>
+    <p><span class="label">Location:</span> <span id="d-location"></span></p>
+    <p><span class="label">Department:</span> <span id="d-dept"></span></p>
+    <p><span class="label">Risk Level:</span> <span id="d-risk"></span></p>
+    <p><span class="label">Immediate Action:</span> <span id="d-action"></span></p>
+    <p><span class="label">Reported By:</span> <span id="d-by"></span></p>
   </div>
-
-  <script>
-    function submitObservation() {
-      const user = auth.currentUser;
-
-      if (!user) {
-        alert("You are not logged in.");
-        return;
-      }
-
-      const type = document.getElementById("type").value;
-      const description = document.getElementById("description").value;
-      const location = document.getElementById("location").value;
-      const department = document.getElementById("department").value;
-      const risk = document.getElementById("risk").value;
-      const action = document.getElementById("action").value;
-
-      if (!type || !description || !location || !department || !risk) {
-        alert("Please fill all mandatory fields.");
-        return;
-      }
-
-      const data = {
-        type: type,
-        description: description,
-        location: location,
-        department: department,
-        riskLevel: risk,
-        immediateAction: action,
-        submittedBy: user.email,
-        submittedAt: firebase.firestore.FieldValue.serverTimestamp()
-      };
-
-      db.collection("safety_observations")
-        .add(data)
-        .then(() => {
-          alert("Observation submitted successfully");
-        })
-        .catch((error) => {
-          alert("Error submitting observation: " + error.message);
-        });
-    }
-  </script>
 
 </body>
 </html>
