@@ -1,154 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>View Safety Observations</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Observations</title>
 
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      padding: 20px;
-      display: none;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-    }
-
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
-    }
-
-    th {
-      background: #1976d2;
-      color: white;
-    }
-
-    tr:hover {
-      background: #f1f1f1;
-      cursor: pointer;
-    }
-
-    .details {
-      background: #ffffff;
-      padding: 15px;
-      margin-top: 20px;
-      border-radius: 6px;
-      display: none;
-    }
-
-    .label {
-      font-weight: bold;
-    }
+    body { font-family: Arial; padding: 20px; display:none; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { padding:10px; border:1px solid #ddd; }
+    th { background:#1976d2; color:white; }
   </style>
 
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
-  authDomain: "hse-connect-5b0a3.firebaseapp.com",
-  projectId: "hse-connect-5b0a3",
-  storageBucket: "hse-connect-5b0a3.firebasestorage.app",
-  messagingSenderId: "1017230242361",
-  appId: "1:1017230242361:web:66d427e171595aae5c53e8",
-  measurementId: "G-2GGKDEJTKW"
+      authDomain: "hse-connect-5b0a3.firebaseapp.com",
+      projectId: "hse-connect-5b0a3",
+      storageBucket: "hse-connect-5b0a3.firebasestorage.app",
+      messagingSenderId: "1017230242361",
+      appId: "1:1017230242361:web:66d427e171595aae5c53e8",
+      measurementId: "G-2GGKDEJTKW"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+    firebase.initializeApp(firebaseConfig);
 
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(async (user) => {
       if (!user) {
         window.location.replace("index.html");
-      } else {
-        document.body.style.display = "block";
-        loadObservations();
+        return;
       }
+
+      const doc = await db.collection("users").doc(user.email).get();
+
+      if (!doc.exists) {
+        alert("No role assigned.");
+        auth.signOut();
+        return;
+      }
+
+      const role = doc.data().role;
+
+      if (role === "Contractor") {
+        alert("Access denied.");
+        window.location.replace("dashboard.html");
+        return;
+      }
+
+      loadObservations();
+      document.body.style.display = "block";
     });
 
     function loadObservations() {
-      const tableBody = document.getElementById("obs-body");
-
       db.collection("safety_observations")
         .orderBy("submittedAt", "desc")
         .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
+        .then(snapshot => {
+          const tbody = document.getElementById("obs-body");
+          tbody.innerHTML = "";
+
+          snapshot.forEach(doc => {
             const d = doc.data();
-
-            const row = document.createElement("tr");
-            row.onclick = () => showDetails(d);
-
-            row.innerHTML = `
-              <td>${d.location || "-"}</td>
-              <td>${d.department || "-"}</td>
-              <td>${d.riskLevel || "-"}</td>
-              <td>${d.submittedBy || "-"}</td>
+            tbody.innerHTML += `
+              <tr>
+                <td>${d.location || "-"}</td>
+                <td>${d.department || "-"}</td>
+                <td>${d.riskLevel || "-"}</td>
+                <td>${d.submittedBy || "-"}</td>
+              </tr>
             `;
-
-            tableBody.appendChild(row);
           });
         });
-    }
-
-    function showDetails(d) {
-      document.getElementById("details").style.display = "block";
-      document.getElementById("d-type").innerText = d.type;
-      document.getElementById("d-desc").innerText = d.description;
-      document.getElementById("d-location").innerText = d.location;
-      document.getElementById("d-dept").innerText = d.department;
-      document.getElementById("d-risk").innerText = d.riskLevel;
-      document.getElementById("d-action").innerText = d.immediateAction;
-      document.getElementById("d-by").innerText = d.submittedBy;
     }
   </script>
 </head>
 
 <body>
 
-  <h2>Safety Observations</h2>
+<h2>Safety Observations</h2>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Location</th>
-        <th>Department</th>
-        <th>Risk</th>
-        <th>Reported By</th>
-      </tr>
-    </thead>
-    <tbody id="obs-body"></tbody>
-  </table>
-
-  <div id="details" class="details">
-    <h3>Observation Details</h3>
-    <p><span class="label">Type:</span> <span id="d-type"></span></p>
-    <p><span class="label">Description:</span> <span id="d-desc"></span></p>
-    <p><span class="label">Location:</span> <span id="d-location"></span></p>
-    <p><span class="label">Department:</span> <span id="d-dept"></span></p>
-    <p><span class="label">Risk Level:</span> <span id="d-risk"></span></p>
-    <p><span class="label">Immediate Action:</span> <span id="d-action"></span></p>
-    <p><span class="label">Reported By:</span> <span id="d-by"></span></p>
-  </div>
+<table>
+  <thead>
+    <tr>
+      <th>Location</th>
+      <th>Department</th>
+      <th>Risk</th>
+      <th>Reported By</th>
+    </tr>
+  </thead>
+  <tbody id="obs-body"></tbody>
+</table>
 
 </body>
 </html>
