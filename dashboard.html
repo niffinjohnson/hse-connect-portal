@@ -1,127 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
   <title>HSE Connect Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
     body {
-      font-family: Arial;
-      background: #f4f6f8;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f2f4f7;
       text-align: center;
-      padding: 30px;
-      display: none;
     }
 
-    .topbar {
+    .top-bar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
+      padding: 20px;
     }
 
-    .card {
-      background: white;
-      padding: 30px;
-      margin: 15px;
-      border-radius: 10px;
-      display: inline-block;
-      width: 260px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transition: 0.2s;
-    }
-
-    .card:hover {
-      background: #e3f2fd;
-      transform: translateY(-3px);
-    }
-
-    button {
-      padding: 8px 15px;
+    .logout-btn {
+      background: red;
+      color: white;
       border: none;
+      padding: 10px 18px;
       border-radius: 5px;
       cursor: pointer;
     }
 
-    .logout {
-      background: red;
-      color: white;
+    h1 {
+      margin-top: 20px;
+      font-size: 36px;
+    }
+
+    .cards {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      padding: 40px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 40px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
     }
   </style>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
-      authDomain: "hse-connect-5b0a3.firebaseapp.com",
-      projectId: "hse-connect-5b0a3",
-      storageBucket: "hse-connect-5b0a3.firebasestorage.app",
-      messagingSenderId: "1017230242361",
-      appId: "1:1017230242361:web:66d427e171595aae5c53e8"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.replace("index.html");
-        return;
-      }
-
-      const doc = await db.collection("users").doc(user.email).get();
-
-      if (!doc.exists) {
-        alert("No role assigned.");
-        auth.signOut();
-        return;
-      }
-
-      const role = doc.data().role;
-      document.getElementById("roleDisplay").innerText = role;
-
-      // Contractor Restrictions
-      if (role === "Contractor") {
-        document.getElementById("obs-card").style.display = "none";
-        document.getElementById("view-card").style.display = "none";
-      }
-
-      document.body.style.display = "block";
-    });
-
-    function logout() {
-      auth.signOut().then(() => {
-        window.location.replace("index.html");
-      });
-    }
-  </script>
 </head>
 
 <body>
 
-  <div class="topbar">
-    <div>Role: <b id="roleDisplay"></b></div>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+<div class="top-bar">
+  <div id="roleDisplay">Role: Loading...</div>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
 
-  <h1>HSE Connect Portal</h1>
+<h1>HSE Connect Portal</h1>
 
-  <div id="obs-card" class="card" onclick="location.href='observation.html'">
+<div class="cards">
+
+  <div class="card" id="obsCard" onclick="location.href='observation.html'">
     📷 Safety Observation
   </div>
 
-  <div id="view-card" class="card" onclick="location.href='view-observations.html'">
+  <div class="card" id="viewObsCard" onclick="location.href='view-observations.html'">
     📋 View Observations
   </div>
 
-  <div class="card" onclick="location.href='hot-work-permit.html'">
-    🔥 Hot Work Permit
+  <div class="card" onclick="location.href='create-permit.html'">
+    🛠 Work Permit
   </div>
 
   <div class="card" onclick="location.href='manage-permits.html'">
@@ -131,6 +95,55 @@
   <div class="card" onclick="location.href='safety-tip.html'">
     💡 Safety Tip of the Day
   </div>
+
+</div>
+
+<script>
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
+    authDomain: "hse-connect-5b0a3.firebaseapp.com",
+    projectId: "hse-connect-5b0a3",
+    storageBucket: "hse-connect-5b0a3.firebasestorage.app",
+    messagingSenderId: "1017230242361",
+    appId: "1:1017230242361:web:66d427e171595aae5c53e8",
+    measurementId: "G-2GGKDEJTKW"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = "index.html";
+      return;
+    }
+
+    db.collection("users").doc(user.email).get().then(doc => {
+      if (!doc.exists) {
+        alert("No role assigned. Contact Admin.");
+        auth.signOut();
+        return;
+      }
+
+      const role = doc.data().role;
+      document.getElementById("roleDisplay").innerHTML = "Role: <strong>" + role + "</strong>";
+
+      // Contractor Restrictions
+      if (role === "Contractor") {
+        document.getElementById("obsCard").style.display = "none";
+        document.getElementById("viewObsCard").style.display = "none";
+      }
+    });
+  });
+
+  function logout() {
+    auth.signOut().then(() => {
+      window.location.href = "index.html";
+    });
+  }
+</script>
 
 </body>
 </html>
