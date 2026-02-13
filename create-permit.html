@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Create Work Permit</title>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      padding: 30px;
+      background: #f4f6f8;
+      display: none;
+    }
+
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    h2 {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>🛠 Create Work Permit</h2>
+
+  <label>Select Permit Type</label>
+  <select id="permitType" onchange="loadPermitForm()">
+    <option value="">-- Select Permit Type --</option>
+    <option value="hotwork">Hot Work</option>
+    <option value="confined">Confined Space</option>
+    <option value="height">Work at Height</option>
+    <option value="rigging">Rigging / Lifting</option>
+  </select>
+
+  <div id="permitFormContainer"></div>
+
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
+    authDomain: "hse-connect-5b0a3.firebaseapp.com",
+    projectId: "hse-connect-5b0a3",
+    storageBucket: "hse-connect-5b0a3.firebasestorage.app",
+    messagingSenderId: "1017230242361",
+    appId: "1:1017230242361:web:66d427e171595aae5c53e8"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = "index.html";
+    } else {
+      document.body.style.display = "block";
+    }
+  });
+
+  function loadPermitForm() {
+    const type = document.getElementById("permitType").value;
+    const container = document.getElementById("permitFormContainer");
+
+    container.innerHTML = "";
+
+    if (type === "hotwork") {
+      const script = document.createElement("script");
+      script.src = "permit-hotwork.js";
+      document.body.appendChild(script);
+    }
+
+    if (type === "confined") {
+      const script = document.createElement("script");
+      script.src = "permit-confined.js";
+      document.body.appendChild(script);
+    }
+
+    if (type === "height") {
+      const script = document.createElement("script");
+      script.src = "permit-height.js";
+      document.body.appendChild(script);
+    }
+
+    if (type === "rigging") {
+      const script = document.createElement("script");
+      script.src = "permit-rigging.js";
+      document.body.appendChild(script);
+    }
+  }
+</script>
+
+</body>
+</html>
