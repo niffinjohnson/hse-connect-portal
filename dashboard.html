@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>HSE Portal</title>
+  <title>HSE Connect Portal</title>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -21,7 +21,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     .card {
@@ -30,7 +30,7 @@
       margin: 15px;
       border-radius: 10px;
       display: inline-block;
-      width: 250px;
+      width: 260px;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       transition: 0.2s;
@@ -38,7 +38,7 @@
 
     .card:hover {
       background: #e3f2fd;
-      transform: translateY(-2px);
+      transform: translateY(-3px);
     }
 
     button {
@@ -86,7 +86,7 @@
       const role = doc.data().role;
       document.getElementById("roleDisplay").innerText = role;
 
-      // Contractor restrictions
+      // Contractor Restrictions
       if (role === "Contractor") {
         document.getElementById("obs-card").style.display = "none";
         document.getElementById("view-card").style.display = "none";
@@ -122,6 +122,10 @@
 
   <div class="card" onclick="location.href='hot-work-permit.html'">
     🔥 Hot Work Permit
+  </div>
+
+  <div class="card" onclick="location.href='manage-permits.html'">
+    📑 Manage Permits
   </div>
 
   <div class="card" onclick="location.href='safety-tip.html'">
