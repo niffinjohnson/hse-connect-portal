@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,6 +39,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-right: 5px;
     }
 
     .approve {
@@ -117,7 +119,8 @@
 
           let actionButtons = "-";
 
-          if (currentRole === "Department" || currentRole === "Admin") {
+          // ADMIN – full control
+          if (currentRole === "Admin") {
 
             if (data.status === "Pending") {
               actionButtons = `<button class="approve" onclick="updateStatus('${id}','Approved')">Approve</button>`;
@@ -125,6 +128,26 @@
 
             if (data.status === "Approved") {
               actionButtons += ` <button class="close" onclick="updateStatus('${id}','Closed')">Close</button>`;
+            }
+          }
+
+          // DEPARTMENT – Approve + Close
+          else if (currentRole === "Department") {
+
+            if (data.status === "Pending") {
+              actionButtons = `<button class="approve" onclick="updateStatus('${id}','Approved')">Approve</button>`;
+            }
+
+            if (data.status === "Approved") {
+              actionButtons += ` <button class="close" onclick="updateStatus('${id}','Closed')">Close</button>`;
+            }
+          }
+
+          // SAFETY – Close only
+          else if (currentRole === "Safety") {
+
+            if (data.status === "Approved") {
+              actionButtons = `<button class="close" onclick="updateStatus('${id}','Closed')">Close</button>`;
             }
           }
 
