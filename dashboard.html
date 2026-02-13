@@ -21,21 +21,24 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 20px;
     }
 
     .card {
       background: white;
       padding: 30px;
-      margin: 20px;
+      margin: 15px;
       border-radius: 10px;
       display: inline-block;
       width: 250px;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.2s;
     }
 
     .card:hover {
       background: #e3f2fd;
+      transform: translateY(-2px);
     }
 
     button {
@@ -58,8 +61,7 @@
       projectId: "hse-connect-5b0a3",
       storageBucket: "hse-connect-5b0a3.firebasestorage.app",
       messagingSenderId: "1017230242361",
-      appId: "1:1017230242361:web:66d427e171595aae5c53e8",
-      measurementId: "G-2GGKDEJTKW"
+      appId: "1:1017230242361:web:66d427e171595aae5c53e8"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -108,7 +110,7 @@
     <button class="logout" onclick="logout()">Logout</button>
   </div>
 
-  <h1>HSE Portal</h1>
+  <h1>HSE Connect Portal</h1>
 
   <div id="obs-card" class="card" onclick="location.href='observation.html'">
     📷 Safety Observation
@@ -118,8 +120,8 @@
     📋 View Observations
   </div>
 
-  <div class="card" onclick="location.href='permit.html'">
-    🛠 Work Permit
+  <div class="card" onclick="location.href='hot-work-permit.html'">
+    🔥 Hot Work Permit
   </div>
 
   <div class="card" onclick="location.href='safety-tip.html'">
