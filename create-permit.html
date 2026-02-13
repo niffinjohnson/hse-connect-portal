@@ -1,24 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Create Work Permit</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Work Permit - HSE Connect</title>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background: #f4f6f9;
-      margin: 0;
-      padding: 20px;
-    }
-
-    h2 {
-      text-align: center;
+      padding: 40px;
     }
 
     .container {
@@ -27,69 +20,60 @@
       background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 15px;
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
     }
 
     input, select, textarea {
       width: 100%;
       padding: 8px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      margin: 8px 0 15px;
     }
 
     button {
-      margin-top: 20px;
-      padding: 12px;
-      width: 100%;
-      background: #1976d2;
+      background: #007bff;
       color: white;
       border: none;
-      border-radius: 5px;
+      padding: 10px 20px;
       cursor: pointer;
-      font-weight: bold;
+      border-radius: 5px;
     }
 
-    button:hover {
-      background: #125ea7;
+    .checklist-item {
+      margin-bottom: 8px;
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
-
 <body>
 
 <div class="container">
   <h2>Create Work Permit</h2>
 
   <label>Permit Type</label>
-  <select id="permitType">
+  <select id="permitType" onchange="loadChecklist()">
     <option value="">Select Permit Type</option>
     <option value="Hot Work">Hot Work</option>
     <option value="Confined Space">Confined Space</option>
     <option value="Work at Height">Work at Height</option>
-    <option value="Rigging / Lifting">Rigging / Lifting</option>
+    <option value="Rigging">Rigging / Erection / Lifting</option>
   </select>
 
-  <label>Project / Site</label>
-  <input type="text" id="site">
-
-  <label>Name of Work</label>
-  <input type="text" id="workName">
+  <label>Project / Location</label>
+  <input type="text" id="location">
 
   <label>Contractor Name</label>
   <input type="text" id="contractor">
 
-  <label>Location</label>
-  <input type="text" id="location">
-
-  <label>Number of Workers</label>
-  <input type="number" id="workers">
+  <label>Work Description</label>
+  <textarea id="description"></textarea>
 
   <label>Start Date</label>
   <input type="date" id="startDate">
@@ -97,9 +81,10 @@
   <label>End Date</label>
   <input type="date" id="endDate">
 
-  <label>Additional Remarks</label>
-  <textarea id="remarks"></textarea>
+  <h3>Checklist</h3>
+  <div id="checklistArea"></div>
 
+  <br>
   <button onclick="submitPermit()">Submit Permit</button>
 </div>
 
@@ -118,41 +103,111 @@
   const auth = firebase.auth();
   const db = firebase.firestore();
 
-  auth.onAuthStateChanged(user => {
-    if (!user) window.location.href = "index.html";
+  let currentUserRole = "";
+
+  auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+      window.location.href = "index.html";
+    } else {
+      const doc = await db.collection("users").doc(user.email).get();
+      if (doc.exists) {
+        currentUserRole = doc.data().role;
+
+        if (currentUserRole === "Contractor") {
+          alert("Contractors cannot create permits.");
+          window.location.href = "dashboard.html";
+        }
+      } else {
+        alert("No role assigned.");
+        window.location.href = "dashboard.html";
+      }
+    }
   });
 
-  function submitPermit() {
+  function loadChecklist() {
+    const type = document.getElementById("permitType").value;
+    const checklistArea = document.getElementById("checklistArea");
+    checklistArea.innerHTML = "";
+
+    let items = [];
+
+    if (type === "Hot Work") {
+      items = [
+        "Fire extinguisher available",
+        "Fire pump operational",
+        "Gas cylinders secured",
+        "Flashback arrestor installed",
+        "Area cleared of combustible material"
+      ];
+    }
+
+    if (type === "Confined Space") {
+      items = [
+        "Gas test conducted",
+        "Oxygen level checked",
+        "Rescue team available",
+        "SCBA provided",
+        "Standby person assigned"
+      ];
+    }
+
+    if (type === "Work at Height") {
+      items = [
+        "Life line in place",
+        "Safety harness provided",
+        "Access ladder secured",
+        "Area cordoned",
+        "Fall arrestor provided"
+      ];
+    }
+
+    if (type === "Rigging") {
+      items = [
+        "Lifting plan approved",
+        "Certified lifting equipment used",
+        "Signal man available",
+        "Area barricaded",
+        "Test certificates verified"
+      ];
+    }
+
+    items.forEach(item => {
+      checklistArea.innerHTML += `
+        <div class="checklist-item">
+          <input type="checkbox" value="${item}"> ${item}
+        </div>
+      `;
+    });
+  }
+
+  async function submitPermit() {
     const user = auth.currentUser;
+    const type = document.getElementById("permitType").value;
 
-    const permitData = {
-      permitType: document.getElementById("permitType").value,
-      site: document.getElementById("site").value,
-      workName: document.getElementById("workName").value,
-      contractor: document.getElementById("contractor").value,
-      location: document.getElementById("location").value,
-      workers: document.getElementById("workers").value,
-      startDate: document.getElementById("startDate").value,
-      endDate: document.getElementById("endDate").value,
-      remarks: document.getElementById("remarks").value,
-      status: "Pending",
-      createdBy: user.email,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-
-    if (!permitData.permitType) {
+    if (!type) {
       alert("Select Permit Type");
       return;
     }
 
-    db.collection("permits").add(permitData)
-    .then(() => {
-      alert("Permit Submitted Successfully");
-      window.location.href = "dashboard.html";
-    })
-    .catch(error => {
-      alert("Error: " + error.message);
+    const checklistChecked = [];
+    document.querySelectorAll("#checklistArea input:checked")
+      .forEach(cb => checklistChecked.push(cb.value));
+
+    await db.collection("permits").add({
+      permitType: type,
+      location: document.getElementById("location").value,
+      contractor: document.getElementById("contractor").value,
+      description: document.getElementById("description").value,
+      startDate: document.getElementById("startDate").value,
+      endDate: document.getElementById("endDate").value,
+      checklist: checklistChecked,
+      status: "Pending",
+      createdBy: user.email,
+      createdAt: new Date()
     });
+
+    alert("Permit Submitted Successfully!");
+    window.location.href = "dashboard.html";
   }
 </script>
 
