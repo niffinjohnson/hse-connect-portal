@@ -20,9 +20,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        h2 {
-            margin-bottom: 20px;
-        }
+        h2 { margin-bottom: 20px; }
 
         label {
             font-weight: bold;
@@ -50,19 +48,10 @@
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #c9302c;
-        }
+        button:hover { background-color: #c9302c; }
 
-        .success {
-            color: green;
-            margin-top: 15px;
-        }
-
-        .error {
-            color: red;
-            margin-top: 15px;
-        }
+        .success { color: green; margin-top: 15px; }
+        .error { color: red; margin-top: 15px; }
     </style>
 </head>
 
@@ -106,10 +95,9 @@
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// 🔥 YOUR SAVED FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
   authDomain: "hse-connect-5b0a3.firebaseapp.com",
@@ -127,6 +115,24 @@ const auth = getAuth(app);
 const form = document.getElementById("hotWorkForm");
 const messageDiv = document.getElementById("message");
 
+async function generatePermitNumber() {
+
+    const year = new Date().getFullYear();
+
+    const q = query(
+        collection(db, "work_permits"),
+        where("permitType", "==", "Hot Work")
+    );
+
+    const snapshot = await getDocs(q);
+
+    const count = snapshot.size + 1;
+
+    const paddedNumber = String(count).padStart(3, '0');
+
+    return `HWP-${year}-${paddedNumber}`;
+}
+
 form.addEventListener("submit", async (e) => {
 
     e.preventDefault();
@@ -138,31 +144,33 @@ form.addEventListener("submit", async (e) => {
         return;
     }
 
-    const permitData = {
-        permitType: "Hot Work",
-        workDescription: document.getElementById("workDescription").value,
-        location: document.getElementById("location").value,
-        contractorName: document.getElementById("contractorName").value,
-        fireWatch: document.getElementById("fireWatch").value,
-        extinguishers: document.getElementById("extinguishers").value,
-        createdBy: user.email,
-        status: "Pending Approval",
-        createdAt: serverTimestamp()
-    };
-
     try {
+
+        const permitNumber = await generatePermitNumber();
+
+        const permitData = {
+            permitNumber: permitNumber,
+            permitType: "Hot Work",
+            workDescription: document.getElementById("workDescription").value,
+            location: document.getElementById("location").value,
+            contractorName: document.getElementById("contractorName").value,
+            fireWatch: document.getElementById("fireWatch").value,
+            extinguishers: document.getElementById("extinguishers").value,
+            createdBy: user.email,
+            status: "Pending Approval",
+            createdAt: serverTimestamp()
+        };
 
         await addDoc(collection(db, "work_permits"), permitData);
 
-        messageDiv.innerHTML = "<p class='success'>Permit submitted successfully!</p>";
+        messageDiv.innerHTML =
+            `<p class='success'>Permit Submitted Successfully!<br>Permit No: ${permitNumber}</p>`;
 
         form.reset();
 
     } catch (error) {
-
         console.error(error);
         messageDiv.innerHTML = "<p class='error'>Error submitting permit.</p>";
-
     }
 
 });
