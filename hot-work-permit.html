@@ -3,115 +3,173 @@
 <head>
     <title>Hot Work Permit - HSE Connect</title>
     <meta charset="UTF-8">
+
     <style>
         body {
-            margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f3f4f6;
-            display: flex;
-            justify-content: center;
-            padding: 40px 0;
+            background: #f3f3f3;
+            padding: 20px;
         }
 
-        .card {
-            background: #ffffff;
-            width: 700px;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        .permit-container {
+            background: white;
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+            border: 2px solid #000;
         }
 
-        h2 {
-            margin-bottom: 30px;
-            font-size: 28px;
+        h1 {
+            text-align: center;
+            margin: 5px 0;
+        }
+
+        .stop-banner {
+            background: #ddd;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #000;
+            margin-bottom: 15px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
         label {
+            font-weight: bold;
             display: block;
-            margin-top: 20px;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 16px;
+            margin-top: 8px;
         }
 
-        textarea,
-        input,
-        select {
+        input, textarea, select {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            font-size: 15px;
-            box-sizing: border-box;
+            padding: 5px;
+            margin-top: 3px;
+            border: 1px solid #000;
         }
 
         textarea {
-            min-height: 80px;
             resize: vertical;
         }
 
-        button {
-            margin-top: 30px;
-            width: 100%;
-            padding: 14px;
-            background-color: #e53935;
-            color: white;
-            font-size: 16px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s ease;
+        .section-title {
+            background: #eee;
+            padding: 5px;
+            margin-top: 15px;
+            border: 1px solid #000;
+            font-weight: bold;
         }
 
-        button:hover {
-            background-color: #c62828;
+        .checkbox-group {
+            margin-top: 5px;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            display: block;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            background: #e53935;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         .message {
-            margin-top: 15px;
-            font-weight: 600;
+            margin-top: 10px;
+            font-weight: bold;
         }
 
-        .success {
-            color: green;
-        }
-
-        .error {
-            color: red;
+        @media print {
+            button { display: none; }
         }
     </style>
 </head>
 
 <body>
 
-<div class="card">
+<div class="permit-container">
 
-    <h2>🔥 Hot Work Permit</h2>
+    <h1>AMPHENOL FCI - HOT WORK PERMIT</h1>
+
+    <div class="stop-banner">
+        STOP – Avoid hot work when possible. Consider using an alternative cold work method.
+    </div>
 
     <form id="hotWorkForm">
 
-        <label>Work Description</label>
-        <textarea id="workDescription" required></textarea>
+        <div class="grid">
 
-        <label>Location</label>
-        <input type="text" id="location" required>
+            <!-- LEFT COLUMN -->
 
-        <label>Contractor Name</label>
-        <input type="text" id="contractorName" required>
+            <div>
 
-        <label>Fire Watch Assigned</label>
-        <select id="fireWatch" required>
-            <option value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
+                <div class="section-title">Work Information</div>
 
-        <label>Extinguishers Provided</label>
-        <select id="extinguishers" required>
-            <option value="">Select</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select>
+                <label>Hot Work By</label>
+                <select id="workBy">
+                    <option>Employee</option>
+                    <option>Contractor</option>
+                </select>
+
+                <label>Date</label>
+                <input type="date" id="date">
+
+                <label>Job Number</label>
+                <input type="text" id="jobNumber">
+
+                <label>Location of Work</label>
+                <input type="text" id="location">
+
+                <label>Work to be Performed</label>
+                <textarea id="workDescription"></textarea>
+
+                <label>Name of Person Performing Hot Work</label>
+                <input type="text" id="performer">
+
+                <label>Name of Fire Watch</label>
+                <input type="text" id="fireWatchName">
+
+                <label>Permit Authorizer (Name & Sign)</label>
+                <input type="text" id="authorizer">
+
+                <label>Permit Expiry Date</label>
+                <input type="date" id="expiryDate">
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+
+            <div>
+
+                <div class="section-title">Required Precautions</div>
+
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="Fire pump in operation"> Fire pump in operation</label>
+                    <label><input type="checkbox" value="Control valves open"> Control valves open</label>
+                    <label><input type="checkbox" value="Extinguishers available"> Extinguishers available</label>
+                    <label><input type="checkbox" value="Hot work equipment good condition"> Equipment in good condition</label>
+                    <label><input type="checkbox" value="Shield combustibles"> Shield combustibles within 35ft</label>
+                    <label><input type="checkbox" value="Remove ignitable liquids"> Remove ignitable liquids</label>
+                    <label><input type="checkbox" value="Isolate equipment"> Isolate equipment from service</label>
+                    <label><input type="checkbox" value="Continuous fire watch"> Continuous fire watch</label>
+                </div>
+
+                <div class="section-title">Additional Required Precautions</div>
+                <textarea id="additionalPrecautions"></textarea>
+
+            </div>
+
+        </div>
 
         <button type="submit">Submit Permit</button>
 
@@ -141,49 +199,45 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-const form = document.getElementById("hotWorkForm");
-const messageDiv = document.getElementById("message");
-
-form.addEventListener("submit", async (e) => {
+document.getElementById("hotWorkForm").addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
     const user = auth.currentUser;
 
     if (!user) {
-        messageDiv.innerHTML = "<span class='error'>You must be logged in.</span>";
+        alert("Login required");
         return;
     }
 
+    const precautions = [];
+    document.querySelectorAll(".checkbox-group input:checked")
+        .forEach(cb => precautions.push(cb.value));
+
     const permitData = {
         permitType: "Hot Work",
-        workDescription: document.getElementById("workDescription").value,
+        workBy: document.getElementById("workBy").value,
+        date: document.getElementById("date").value,
+        jobNumber: document.getElementById("jobNumber").value,
         location: document.getElementById("location").value,
-        contractorName: document.getElementById("contractorName").value,
-        fireWatch: document.getElementById("fireWatch").value,
-        extinguishers: document.getElementById("extinguishers").value,
+        workDescription: document.getElementById("workDescription").value,
+        performer: document.getElementById("performer").value,
+        fireWatchName: document.getElementById("fireWatchName").value,
+        authorizer: document.getElementById("authorizer").value,
+        expiryDate: document.getElementById("expiryDate").value,
+        precautions: precautions,
+        additionalPrecautions: document.getElementById("additionalPrecautions").value,
         createdBy: user.email,
         status: "Pending Approval",
         createdAt: serverTimestamp()
     };
 
-    try {
+    await addDoc(collection(db, "permits"), permitData);
 
-        await addDoc(collection(db, "permits"), permitData);
+    document.getElementById("message").innerHTML =
+        "Permit submitted successfully.";
 
-        messageDiv.innerHTML =
-            "<span class='success'>Permit submitted successfully!</span>";
-
-        form.reset();
-
-    } catch (error) {
-
-        console.error(error);
-        messageDiv.innerHTML =
-            "<span class='error'>Error submitting permit.</span>";
-
-    }
-
+    e.target.reset();
 });
 
 </script>
