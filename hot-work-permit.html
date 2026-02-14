@@ -1,231 +1,173 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hot Work Permit</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      padding: 30px;
-    }
+    <title>Hot Work Permit - HSE Connect</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
 
-    .container {
-      background: white;
-      padding: 25px;
-      max-width: 1000px;
-      margin: auto;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      border-radius: 10px;
-    }
+        .container {
+            background: white;
+            padding: 30px;
+            width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+        h2 {
+            margin-bottom: 20px;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
 
-    table, th, td {
-      border: 1px solid #000;
-    }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
 
-    th, td {
-      padding: 8px;
-      font-size: 14px;
-    }
+        button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 12px;
+            background-color: #d9534f;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
 
-    input[type="text"],
-    input[type="date"],
-    textarea {
-      width: 100%;
-      border: none;
-      outline: none;
-    }
+        button:hover {
+            background-color: #c9302c;
+        }
 
-    textarea {
-      resize: none;
-    }
+        .success {
+            color: green;
+            margin-top: 15px;
+        }
 
-    .center {
-      text-align: center;
-    }
-
-    button {
-      background: #d9534f;
-      color: white;
-      padding: 12px;
-      width: 100%;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #c9302c;
-    }
-  </style>
+        .error {
+            color: red;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="container">
+    <h2>🔥 Hot Work Permit</h2>
 
-<h2>🔥 HOT WORK PERMIT</h2>
+    <form id="hotWorkForm">
 
-<table>
-<tr>
-<td>Project Site</td>
-<td><input type="text"></td>
-<td>Permit No</td>
-<td><input type="text"></td>
-</tr>
+        <label>Work Description</label>
+        <textarea id="workDescription" required></textarea>
 
-<tr>
-<td>Date</td>
-<td><input type="date"></td>
-<td>Exact Location of Work</td>
-<td><input type="text"></td>
-</tr>
+        <label>Location</label>
+        <input type="text" id="location" required>
 
-<tr>
-<td>Name of Work</td>
-<td><input type="text"></td>
-<td>Nature of Work</td>
-<td><input type="text"></td>
-</tr>
+        <label>Contractor Name</label>
+        <input type="text" id="contractorName" required>
 
-<tr>
-<td>Name of Contractor</td>
-<td><input type="text"></td>
-<td>Total No. of Workers</td>
-<td><input type="text"></td>
-</tr>
+        <label>Fire Watch Assigned</label>
+        <select id="fireWatch" required>
+            <option value="">Select</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
 
-<tr>
-<td>Duration From</td>
-<td><input type="date"></td>
-<td>Duration To</td>
-<td><input type="date"></td>
-</tr>
-</table>
+        <label>Extinguishers Provided</label>
+        <select id="extinguishers" required>
+            <option value="">Select</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
 
-<h3>Safety Checklist</h3>
+        <button type="submit">Submit Permit</button>
 
-<table>
-<tr>
-<th>SL</th>
-<th>Item</th>
-<th class="center">Done</th>
-<th class="center">No / NA</th>
-<th>Remarks</th>
-</tr>
+        <div id="message"></div>
 
-<tr>
-<td>1</td>
-<td>Work area inspected</td>
-<td class="center"><input type="radio" name="c1"></td>
-<td class="center"><input type="radio" name="c1"></td>
-<td><input type="text"></td>
-</tr>
-
-<tr>
-<td>2</td>
-<td>Flammable materials removed</td>
-<td class="center"><input type="radio" name="c2"></td>
-<td class="center"><input type="radio" name="c2"></td>
-<td><input type="text"></td>
-</tr>
-
-<tr>
-<td>3</td>
-<td>Fire extinguishers provided</td>
-<td class="center"><input type="radio" name="c3"></td>
-<td class="center"><input type="radio" name="c3"></td>
-<td><input type="text"></td>
-</tr>
-
-<tr>
-<td>4</td>
-<td>Fire watch assigned</td>
-<td class="center"><input type="radio" name="c4"></td>
-<td class="center"><input type="radio" name="c4"></td>
-<td><input type="text"></td>
-</tr>
-
-<tr>
-<td>5</td>
-<td>Flashback arrestors provided</td>
-<td class="center"><input type="radio" name="c5"></td>
-<td class="center"><input type="radio" name="c5"></td>
-<td><input type="text"></td>
-</tr>
-
-<tr>
-<td>6</td>
-<td>Gas cylinders secured upright</td>
-<td class="center"><input type="radio" name="c6"></td>
-<td class="center"><input type="radio" name="c6"></td>
-<td><input type="text"></td>
-</tr>
-
-<tr>
-<td>7</td>
-<td>Fire alarm isolated (if required)</td>
-<td class="center"><input type="radio" name="c7"></td>
-<td class="center"><input type="radio" name="c7"></td>
-<td><input type="text"></td>
-</tr>
-
-<tr>
-<td>8</td>
-<td>PPE provided (Helmet, Gloves, Face Shield)</td>
-<td class="center"><input type="radio" name="c8"></td>
-<td class="center"><input type="radio" name="c8"></td>
-<td><input type="text"></td>
-</tr>
-
-</table>
-
-<h3>Additional Precautions (If Any)</h3>
-<textarea rows="3"></textarea>
-
-<br><br>
-
-<table>
-<tr>
-<td>Permit Granted</td>
-<td>
-YES <input type="radio" name="permit">
-NO <input type="radio" name="permit">
-</td>
-</tr>
-
-<tr>
-<td>Received By (Sub Contractor Supervisor)</td>
-<td><input type="text"></td>
-</tr>
-
-<tr>
-<td>Issued By (FCI Engineer)</td>
-<td><input type="text"></td>
-</tr>
-
-<tr>
-<td>Checked By (HSE Engineer)</td>
-<td><input type="text"></td>
-</tr>
-</table>
-
-<br>
-
-<button>Submit Permit</button>
-
+    </form>
 </div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// 🔥 YOUR SAVED FIREBASE CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
+  authDomain: "hse-connect-5b0a3.firebaseapp.com",
+  projectId: "hse-connect-5b0a3",
+  storageBucket: "hse-connect-5b0a3.firebasestorage.app",
+  messagingSenderId: "1017230242361",
+  appId: "1:1017230242361:web:66d427e171595aae5c53e8",
+  measurementId: "G-2GGKDEJTKW"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const form = document.getElementById("hotWorkForm");
+const messageDiv = document.getElementById("message");
+
+form.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        messageDiv.innerHTML = "<p class='error'>You must be logged in.</p>";
+        return;
+    }
+
+    const permitData = {
+        permitType: "Hot Work",
+        workDescription: document.getElementById("workDescription").value,
+        location: document.getElementById("location").value,
+        contractorName: document.getElementById("contractorName").value,
+        fireWatch: document.getElementById("fireWatch").value,
+        extinguishers: document.getElementById("extinguishers").value,
+        createdBy: user.email,
+        status: "Pending Approval",
+        createdAt: serverTimestamp()
+    };
+
+    try {
+
+        await addDoc(collection(db, "work_permits"), permitData);
+
+        messageDiv.innerHTML = "<p class='success'>Permit submitted successfully!</p>";
+
+        form.reset();
+
+    } catch (error) {
+
+        console.error(error);
+        messageDiv.innerHTML = "<p class='error'>Error submitting permit.</p>";
+
+    }
+
+});
+
+</script>
 
 </body>
 </html>
