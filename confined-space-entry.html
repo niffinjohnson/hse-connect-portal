@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Confined Space Entry Permit - HSE Connect</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #e5e5e5;
+}
+
+.page {
+    width: 1000px;
+    margin: 20px auto;
+    background: white;
+    padding: 10px;
+    border: 2px solid #000;
+}
+
+h1, h2 {
+    text-align: center;
+    margin: 5px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+}
+
+td, th {
+    border: 1px solid #000;
+    padding: 4px;
+    font-size: 12px;
+    vertical-align: top;
+}
+
+.section {
+    background: #f2f2f2;
+    font-weight: bold;
+    text-align: center;
+}
+
+input, textarea {
+    width: 100%;
+    border: none;
+    font-size: 12px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #1976d2;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+@media print {
+    button { display: none; }
+}
+</style>
+</head>
+
+<body>
+
+<form id="confinedForm">
+
+<div class="page">
+
+<h2>AMPHENOL FCI</h2>
+<h1>CONFINED SPACE ENTRY PERMIT</h1>
+
+<table>
+<tr>
+<td width="25%">Permit No</td>
+<td width="25%"><input id="permitNo"></td>
+<td width="25%">Date</td>
+<td width="25%"><input type="date" id="date"></td>
+</tr>
+
+<tr>
+<td>Location of Confined Space</td>
+<td colspan="3"><input id="location"></td>
+</tr>
+
+<tr>
+<td>Description of Work</td>
+<td colspan="3"><textarea id="workDescription"></textarea></td>
+</tr>
+
+<tr>
+<td>Type of Confined Space</td>
+<td colspan="3"><input id="spaceType"></td>
+</tr>
+
+<tr>
+<td>Entry Supervisor</td>
+<td><input id="supervisor"></td>
+<td>Authorized By</td>
+<td><input id="authorizer"></td>
+</tr>
+</table>
+
+<div class="section">Atmospheric Testing</div>
+
+<table>
+<tr>
+<th>Parameter</th>
+<th>Acceptable Limit</th>
+<th>Actual Reading</th>
+<th>Time</th>
+</tr>
+
+<tr>
+<td>Oxygen (%)</td>
+<td>19.5 – 23.5%</td>
+<td><input id="oxygen"></td>
+<td><input type="time" id="oxygenTime"></td>
+</tr>
+
+<tr>
+<td>LEL (%)</td>
+<td>< 10%</td>
+<td><input id="lel"></td>
+<td><input type="time" id="lelTime"></td>
+</tr>
+
+<tr>
+<td>Toxic Gas (Specify)</td>
+<td>Below PEL</td>
+<td><input id="toxicGas"></td>
+<td><input type="time" id="toxicTime"></td>
+</tr>
+</table>
+
+<div class="section">Hazard Control Measures</div>
+
+<table>
+<tr>
+<td><label><input type="checkbox" value="Isolation completed"> Isolation completed</label></td>
+<td><label><input type="checkbox" value="LOTO applied"> LOTO applied</label></td>
+<td><label><input type="checkbox" value="Ventilation provided"> Ventilation provided</label></td>
+</tr>
+
+<tr>
+<td><label><input type="checkbox" value="Gas monitoring ongoing"> Continuous gas monitoring</label></td>
+<td><label><input type="checkbox" value="Rescue equipment available"> Rescue equipment available</label></td>
+<td><label><input type="checkbox" value="Communication established"> Communication established</label></td>
+</tr>
+
+<tr>
+<td colspan="3"><label><input type="checkbox" value="Standby attendant present"> Standby attendant present</label></td>
+</tr>
+</table>
+
+<div class="section">Authorized Entrants</div>
+
+<table>
+<tr>
+<th>Name</th>
+<th>Signature</th>
+<th>Time In</th>
+<th>Time Out</th>
+</tr>
+
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input type="time"></td>
+<td><input type="time"></td>
+</tr>
+
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input type="time"></td>
+<td><input type="time"></td>
+</tr>
+
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input type="time"></td>
+<td><input type="time"></td>
+</tr>
+</table>
+
+<div class="section">Permit Close Out</div>
+
+<table>
+<tr>
+<td>Work Completed By</td>
+<td><input id="closedBy"></td>
+<td>Date & Time</td>
+<td><input type="datetime-local" id="closeTime"></td>
+</tr>
+</table>
+
+<button type="submit">SUBMIT CONFINED SPACE PERMIT</button>
+
+</div>
+
+</form>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDsFX7tQezhtJi6GkVBpZXn7YyJgZfyi7o",
+  authDomain: "hse-connect-5b0a3.firebaseapp.com",
+  projectId: "hse-connect-5b0a3",
+  storageBucket: "hse-connect-5b0a3.firebasestorage.app",
+  messagingSenderId: "1017230242361",
+  appId: "1:1017230242361:web:66d427e171595aae5c53e8",
+  measurementId: "G-2GGKDEJTKW"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+document.getElementById("confinedForm").addEventListener("submit", async (e) => {
+
+e.preventDefault();
+
+const user = auth.currentUser;
+if (!user) {
+alert("Login required.");
+return;
+}
+
+const controls = [];
+document.querySelectorAll("input[type=checkbox]:checked")
+.forEach(cb => controls.push(cb.value));
+
+const permitData = {
+permitType: "Confined Space",
+permitNo: document.getElementById("permitNo").value,
+date: document.getElementById("date").value,
+location: document.getElementById("location").value,
+workDescription: document.getElementById("workDescription").value,
+spaceType: document.getElementById("spaceType").value,
+supervisor: document.getElementById("supervisor").value,
+authorizer: document.getElementById("authorizer").value,
+oxygen: document.getElementById("oxygen").value,
+lel: document.getElementById("lel").value,
+toxicGas: document.getElementById("toxicGas").value,
+controls: controls,
+closedBy: document.getElementById("closedBy").value,
+closeTime: document.getElementById("closeTime").value,
+createdBy: user.email,
+status: "Pending Approval",
+createdAt: serverTimestamp()
+};
+
+await addDoc(collection(db, "permits"), permitData);
+
+alert("Confined Space Permit Submitted Successfully.");
+e.target.reset();
+
+});
+
+</script>
+
+</body>
+</html>
