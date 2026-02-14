@@ -5,59 +5,87 @@
     <meta charset="UTF-8">
     <style>
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
+            background-color: #f3f4f6;
             display: flex;
             justify-content: center;
+            padding: 40px 0;
+        }
+
+        .card {
+            background: #ffffff;
+            width: 700px;
             padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
-        .container {
-            background: white;
-            padding: 30px;
-            width: 600px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        h2 {
+            margin-bottom: 30px;
+            font-size: 28px;
         }
-
-        h2 { margin-bottom: 20px; }
 
         label {
-            font-weight: bold;
             display: block;
-            margin-top: 15px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 16px;
         }
 
-        input, textarea, select {
+        textarea,
+        input,
+        select {
             width: 100%;
-            padding: 10px;
-            margin-top: 6px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
         }
 
         button {
-            margin-top: 25px;
+            margin-top: 30px;
             width: 100%;
-            padding: 12px;
-            background-color: #d9534f;
+            padding: 14px;
+            background-color: #e53935;
             color: white;
             font-size: 16px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
+            transition: 0.2s ease;
         }
 
-        button:hover { background-color: #c9302c; }
+        button:hover {
+            background-color: #c62828;
+        }
 
-        .success { color: green; margin-top: 15px; }
-        .error { color: red; margin-top: 15px; }
+        .message {
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="card">
+
     <h2>🔥 Hot Work Permit</h2>
 
     <form id="hotWorkForm">
@@ -87,9 +115,10 @@
 
         <button type="submit">Submit Permit</button>
 
-        <div id="message"></div>
+        <div id="message" class="message"></div>
 
     </form>
+
 </div>
 
 <script type="module">
@@ -122,7 +151,7 @@ form.addEventListener("submit", async (e) => {
     const user = auth.currentUser;
 
     if (!user) {
-        messageDiv.innerHTML = "<p class='error'>You must be logged in.</p>";
+        messageDiv.innerHTML = "<span class='error'>You must be logged in.</span>";
         return;
     }
 
@@ -143,7 +172,7 @@ form.addEventListener("submit", async (e) => {
         await addDoc(collection(db, "permits"), permitData);
 
         messageDiv.innerHTML =
-            "<p class='success'>Permit submitted successfully!</p>";
+            "<span class='success'>Permit submitted successfully!</span>";
 
         form.reset();
 
@@ -151,7 +180,7 @@ form.addEventListener("submit", async (e) => {
 
         console.error(error);
         messageDiv.innerHTML =
-            "<p class='error'>Error submitting permit.</p>";
+            "<span class='error'>Error submitting permit.</span>";
 
     }
 
