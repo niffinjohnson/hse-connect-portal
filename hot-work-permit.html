@@ -1,181 +1,185 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hot Work Permit - HSE Connect</title>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<title>Hot Work Permit - HSE Connect</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f3f3f3;
-            padding: 20px;
-        }
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
+    padding: 20px;
+}
 
-        .permit-container {
-            background: white;
-            max-width: 1100px;
-            margin: auto;
-            padding: 20px;
-            border: 2px solid #000;
-        }
+.permit {
+    background: white;
+    max-width: 1200px;
+    margin: auto;
+    padding: 10px;
+    border: 2px solid #000;
+}
 
-        h1 {
-            text-align: center;
-            margin: 5px 0;
-        }
+h1 {
+    text-align: center;
+    margin: 5px 0;
+    letter-spacing: 2px;
+}
 
-        .stop-banner {
-            background: #ddd;
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-            border: 1px solid #000;
-            margin-bottom: 15px;
-        }
+.banner {
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #000;
+    padding: 6px;
+    margin-bottom: 10px;
+    background: #ddd;
+}
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
 
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 8px;
-        }
+td, th {
+    border: 1px solid #000;
+    padding: 5px;
+    vertical-align: top;
+    font-size: 13px;
+}
 
-        input, textarea, select {
-            width: 100%;
-            padding: 5px;
-            margin-top: 3px;
-            border: 1px solid #000;
-        }
+.section-title {
+    background: #eee;
+    font-weight: bold;
+    text-align: center;
+}
 
-        textarea {
-            resize: vertical;
-        }
+input, textarea {
+    width: 100%;
+    border: none;
+    font-size: 13px;
+}
 
-        .section-title {
-            background: #eee;
-            padding: 5px;
-            margin-top: 15px;
-            border: 1px solid #000;
-            font-weight: bold;
-        }
+textarea {
+    resize: vertical;
+}
 
-        .checkbox-group {
-            margin-top: 5px;
-        }
+.checkbox-group label {
+    display: block;
+    font-weight: normal;
+}
 
-        .checkbox-group label {
-            font-weight: normal;
-            display: block;
-        }
+button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+    background: #d32f2f;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        button {
-            margin-top: 20px;
-            padding: 10px;
-            width: 100%;
-            background: #e53935;
-            color: white;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .message {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        @media print {
-            button { display: none; }
-        }
-    </style>
+.message {
+    margin-top: 10px;
+    font-weight: bold;
+}
+</style>
 </head>
 
 <body>
 
-<div class="permit-container">
+<div class="permit">
 
-    <h1>AMPHENOL FCI - HOT WORK PERMIT</h1>
+<h1>AMPHENOL FCI</h1>
+<h1>HOT WORK PERMIT</h1>
 
-    <div class="stop-banner">
-        STOP – Avoid hot work when possible. Consider using an alternative cold work method.
-    </div>
+<div class="banner">
+STOP – Avoid hot work when possible. Consider using an alternative cold work method.
+</div>
 
-    <form id="hotWorkForm">
+<form id="hotWorkForm">
 
-        <div class="grid">
-
-            <!-- LEFT COLUMN -->
-
-            <div>
-
-                <div class="section-title">Work Information</div>
-
-                <label>Hot Work By</label>
-                <select id="workBy">
-                    <option>Employee</option>
-                    <option>Contractor</option>
-                </select>
-
-                <label>Date</label>
-                <input type="date" id="date">
-
-                <label>Job Number</label>
-                <input type="text" id="jobNumber">
-
-                <label>Location of Work</label>
-                <input type="text" id="location">
-
-                <label>Work to be Performed</label>
-                <textarea id="workDescription"></textarea>
-
-                <label>Name of Person Performing Hot Work</label>
-                <input type="text" id="performer">
-
-                <label>Name of Fire Watch</label>
-                <input type="text" id="fireWatchName">
-
-                <label>Permit Authorizer (Name & Sign)</label>
-                <input type="text" id="authorizer">
-
-                <label>Permit Expiry Date</label>
-                <input type="date" id="expiryDate">
-
-            </div>
-
-            <!-- RIGHT COLUMN -->
-
-            <div>
-
-                <div class="section-title">Required Precautions</div>
-
-                <div class="checkbox-group">
-                    <label><input type="checkbox" value="Fire pump in operation"> Fire pump in operation</label>
-                    <label><input type="checkbox" value="Control valves open"> Control valves open</label>
-                    <label><input type="checkbox" value="Extinguishers available"> Extinguishers available</label>
-                    <label><input type="checkbox" value="Hot work equipment good condition"> Equipment in good condition</label>
-                    <label><input type="checkbox" value="Shield combustibles"> Shield combustibles within 35ft</label>
-                    <label><input type="checkbox" value="Remove ignitable liquids"> Remove ignitable liquids</label>
-                    <label><input type="checkbox" value="Isolate equipment"> Isolate equipment from service</label>
-                    <label><input type="checkbox" value="Continuous fire watch"> Continuous fire watch</label>
-                </div>
-
-                <div class="section-title">Additional Required Precautions</div>
-                <textarea id="additionalPrecautions"></textarea>
-
-            </div>
-
+<table>
+<tr>
+    <td width="50%">
+        <b>Instruction for Permit Authorizer</b><br>
+        1. Specify precautions.<br>
+        2. Keep Part I during process.<br>
+        3. Issue Part II to worker.<br>
+        4. Monitor post work fire watch.<br>
+        5. Sign off final check.
+    </td>
+    <td width="50%">
+        <div class="section-title">Required Precautions</div>
+        <div class="checkbox-group">
+            <label><input type="checkbox" value="Fire pump operational"> Fire pump operational</label>
+            <label><input type="checkbox" value="Control valves open"> Control valves open</label>
+            <label><input type="checkbox" value="Extinguishers available"> Extinguishers available</label>
+            <label><input type="checkbox" value="Equipment in good condition"> Equipment in good condition</label>
+            <label><input type="checkbox" value="Shield combustibles within 35ft"> Shield combustibles within 35 ft</label>
+            <label><input type="checkbox" value="Remove ignitable liquids"> Remove ignitable liquids</label>
+            <label><input type="checkbox" value="Isolate equipment"> Isolate equipment</label>
+            <label><input type="checkbox" value="Continuous fire watch"> Continuous fire watch</label>
         </div>
+    </td>
+</tr>
+</table>
 
-        <button type="submit">Submit Permit</button>
+<table>
+<tr>
+    <td width="25%">Hot Work By</td>
+    <td width="25%">
+        <select id="workBy">
+            <option>Employee</option>
+            <option>Contractor</option>
+        </select>
+    </td>
+    <td width="25%">Date</td>
+    <td width="25"><input type="date" id="date"></td>
+</tr>
 
-        <div id="message" class="message"></div>
+<tr>
+    <td>Job Number</td>
+    <td><input type="text" id="jobNumber"></td>
+    <td>Location</td>
+    <td><input type="text" id="location"></td>
+</tr>
 
-    </form>
+<tr>
+    <td colspan="4">Work to be Performed
+        <textarea id="workDescription" rows="2"></textarea>
+    </td>
+</tr>
+
+<tr>
+    <td colspan="2">Name Performing Hot Work
+        <input type="text" id="performer">
+    </td>
+    <td colspan="2">Name Performing Fire Watch
+        <input type="text" id="fireWatchName">
+    </td>
+</tr>
+
+<tr>
+    <td colspan="2">Permit Authorizer (Name & Sign)
+        <input type="text" id="authorizer">
+    </td>
+    <td>Permit Expiry Date</td>
+    <td><input type="date" id="expiryDate"></td>
+</tr>
+
+<tr>
+    <td colspan="4">Additional Required Precautions
+        <textarea id="additionalPrecautions" rows="2"></textarea>
+    </td>
+</tr>
+</table>
+
+<button type="submit">SUBMIT PERMIT</button>
+
+<div id="message" class="message"></div>
+
+</form>
 
 </div>
 
@@ -204,9 +208,8 @@ document.getElementById("hotWorkForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const user = auth.currentUser;
-
     if (!user) {
-        alert("Login required");
+        alert("Login required.");
         return;
     }
 
