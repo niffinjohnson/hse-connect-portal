@@ -7,48 +7,47 @@
 <style>
 body {
     font-family: Arial, sans-serif;
-    background: #f0f0f0;
-    padding: 20px;
+    background: #e5e5e5;
 }
 
-.permit {
+.page {
+    width: 1000px;
+    margin: 20px auto;
     background: white;
-    max-width: 1200px;
-    margin: auto;
     padding: 10px;
     border: 2px solid #000;
+    page-break-after: always;
 }
 
-h1 {
+h1, h2 {
     text-align: center;
     margin: 5px 0;
-    letter-spacing: 2px;
 }
 
 .banner {
-    text-align: center;
-    font-weight: bold;
+    background: #ddd;
     border: 1px solid #000;
     padding: 6px;
+    text-align: center;
+    font-weight: bold;
     margin-bottom: 10px;
-    background: #ddd;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 td, th {
     border: 1px solid #000;
-    padding: 5px;
+    padding: 4px;
+    font-size: 12px;
     vertical-align: top;
-    font-size: 13px;
 }
 
-.section-title {
-    background: #eee;
+.section {
+    background: #f2f2f2;
     font-weight: bold;
     text-align: center;
 }
@@ -56,20 +55,14 @@ td, th {
 input, textarea {
     width: 100%;
     border: none;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 textarea {
     resize: vertical;
 }
 
-.checkbox-group label {
-    display: block;
-    font-weight: normal;
-}
-
 button {
-    margin-top: 10px;
     width: 100%;
     padding: 10px;
     background: #d32f2f;
@@ -79,109 +72,177 @@ button {
     cursor: pointer;
 }
 
-.message {
-    margin-top: 10px;
-    font-weight: bold;
+@media print {
+    button { display: none; }
 }
 </style>
 </head>
 
 <body>
 
-<div class="permit">
+<form id="hotWorkForm">
 
-<h1>AMPHENOL FCI</h1>
+<!-- PAGE 1 -->
+<div class="page">
+
+<h2>AMPHENOL FCI</h2>
 <h1>HOT WORK PERMIT</h1>
 
 <div class="banner">
 STOP – Avoid hot work when possible. Consider using an alternative cold work method.
 </div>
 
-<form id="hotWorkForm">
-
 <table>
 <tr>
-    <td width="50%">
-        <b>Instruction for Permit Authorizer</b><br>
-        1. Specify precautions.<br>
-        2. Keep Part I during process.<br>
-        3. Issue Part II to worker.<br>
-        4. Monitor post work fire watch.<br>
-        5. Sign off final check.
-    </td>
-    <td width="50%">
-        <div class="section-title">Required Precautions</div>
-        <div class="checkbox-group">
-            <label><input type="checkbox" value="Fire pump operational"> Fire pump operational</label>
-            <label><input type="checkbox" value="Control valves open"> Control valves open</label>
-            <label><input type="checkbox" value="Extinguishers available"> Extinguishers available</label>
-            <label><input type="checkbox" value="Equipment in good condition"> Equipment in good condition</label>
-            <label><input type="checkbox" value="Shield combustibles within 35ft"> Shield combustibles within 35 ft</label>
-            <label><input type="checkbox" value="Remove ignitable liquids"> Remove ignitable liquids</label>
-            <label><input type="checkbox" value="Isolate equipment"> Isolate equipment</label>
-            <label><input type="checkbox" value="Continuous fire watch"> Continuous fire watch</label>
-        </div>
-    </td>
+<td width="50%">
+<b>Instruction for Permit Authorizer</b><br>
+1. Specify precautions.<br>
+2. Keep Part I during work.<br>
+3. Issue Part II to worker.<br>
+4. Monitor post-work fire watch.<br>
+5. Sign final check.
+</td>
+<td width="50%">
+<div class="section">Required Precautions</div>
+<label><input type="checkbox" value="Fire pump operational"> Fire pump operational</label>
+<label><input type="checkbox" value="Control valves open"> Control valves open</label>
+<label><input type="checkbox" value="Extinguishers available"> Extinguishers available</label>
+<label><input type="checkbox" value="Equipment in good condition"> Equipment in good condition</label>
+<label><input type="checkbox" value="Shield combustibles within 35ft"> Shield combustibles within 35 ft</label>
+<label><input type="checkbox" value="Remove ignitable liquids"> Remove ignitable liquids</label>
+<label><input type="checkbox" value="Isolate equipment"> Isolate equipment</label>
+<label><input type="checkbox" value="Continuous fire watch"> Continuous fire watch</label>
+</td>
 </tr>
 </table>
 
 <table>
 <tr>
-    <td width="25%">Hot Work By</td>
-    <td width="25%">
-        <select id="workBy">
-            <option>Employee</option>
-            <option>Contractor</option>
-        </select>
-    </td>
-    <td width="25%">Date</td>
-    <td width="25"><input type="date" id="date"></td>
+<td width="25%">Hot Work By</td>
+<td width="25%"><input id="workBy"></td>
+<td width="25%">Date</td>
+<td width="25%"><input type="date" id="date"></td>
 </tr>
 
 <tr>
-    <td>Job Number</td>
-    <td><input type="text" id="jobNumber"></td>
-    <td>Location</td>
-    <td><input type="text" id="location"></td>
+<td>Job Number</td>
+<td><input id="jobNumber"></td>
+<td>Location</td>
+<td><input id="location"></td>
 </tr>
 
 <tr>
-    <td colspan="4">Work to be Performed
-        <textarea id="workDescription" rows="2"></textarea>
-    </td>
+<td colspan="4">Work to be Performed
+<textarea id="workDescription"></textarea>
+</td>
 </tr>
 
 <tr>
-    <td colspan="2">Name Performing Hot Work
-        <input type="text" id="performer">
-    </td>
-    <td colspan="2">Name Performing Fire Watch
-        <input type="text" id="fireWatchName">
-    </td>
+<td colspan="2">Name Performing Hot Work
+<input id="performer">
+</td>
+<td colspan="2">Name Performing Fire Watch
+<input id="fireWatchName">
+</td>
 </tr>
 
 <tr>
-    <td colspan="2">Permit Authorizer (Name & Sign)
-        <input type="text" id="authorizer">
-    </td>
-    <td>Permit Expiry Date</td>
-    <td><input type="date" id="expiryDate"></td>
+<td colspan="2">Permit Authorizer (Name & Sign)
+<input id="authorizer">
+</td>
+<td>Permit Expiry Date</td>
+<td><input type="date" id="expiryDate"></td>
 </tr>
 
 <tr>
-    <td colspan="4">Additional Required Precautions
-        <textarea id="additionalPrecautions" rows="2"></textarea>
-    </td>
+<td colspan="4">Additional Required Precautions
+<textarea id="additionalPrecautions"></textarea>
+</td>
+</tr>
+</table>
+
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+
+<h1>WARNING</h1>
+<h2>HOT WORK IN PROGRESS! WATCH FOR FIRE</h2>
+
+<table>
+<tr>
+<td width="50%">
+<b>Instructions</b><br>
+Record start and completion time.<br>
+Monitor area during and after work.<br>
+Sign and return permit.
+</td>
+<td width="50%">
+<div class="section">Post-Work Fire Watch</div>
+<label><input type="checkbox" value="1 hour watch"> 1 hour fire watch</label>
+<label><input type="checkbox" value="3 hour monitoring"> 3 hour monitoring</label>
+</td>
+</tr>
+</table>
+
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+
+<h1>WARNING</h1>
+<h2>HOT WORK IN PROGRESS! WATCH FOR FIRE</h2>
+
+<table>
+<tr>
+<th>Emergency Contact</th>
+<th>Number</th>
+</tr>
+<tr>
+<td><input></td>
+<td><input></td>
+</tr>
+<tr>
+<td><input></td>
+<td><input></td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th colspan="6">Construction & Occupancy Fire Watch Guidelines</th>
+</tr>
+<tr>
+<th>Occupancy</th>
+<th>Non-Combustible</th>
+<th>Watch</th>
+<th>Combustible</th>
+<th>Watch</th>
+<th>Monitor</th>
+</tr>
+<tr>
+<td>Office/Manufacturing</td>
+<td>1 hr</td>
+<td>1 hr</td>
+<td>3 hr</td>
+<td>1 hr</td>
+<td>5 hr</td>
+</tr>
+<tr>
+<td>Warehousing</td>
+<td>1 hr</td>
+<td>2 hr</td>
+<td>3 hr</td>
+<td>1 hr</td>
+<td>5 hr</td>
 </tr>
 </table>
 
 <button type="submit">SUBMIT PERMIT</button>
 
-<div id="message" class="message"></div>
+</div>
 
 </form>
-
-</div>
 
 <script type="module">
 
@@ -205,42 +266,36 @@ const auth = getAuth(app);
 
 document.getElementById("hotWorkForm").addEventListener("submit", async (e) => {
 
-    e.preventDefault();
+e.preventDefault();
 
-    const user = auth.currentUser;
-    if (!user) {
-        alert("Login required.");
-        return;
-    }
+const user = auth.currentUser;
+if (!user) {
+alert("Login required.");
+return;
+}
 
-    const precautions = [];
-    document.querySelectorAll(".checkbox-group input:checked")
-        .forEach(cb => precautions.push(cb.value));
+const permitData = {
+permitType: "Hot Work",
+workBy: document.getElementById("workBy").value,
+date: document.getElementById("date").value,
+jobNumber: document.getElementById("jobNumber").value,
+location: document.getElementById("location").value,
+workDescription: document.getElementById("workDescription").value,
+performer: document.getElementById("performer").value,
+fireWatchName: document.getElementById("fireWatchName").value,
+authorizer: document.getElementById("authorizer").value,
+expiryDate: document.getElementById("expiryDate").value,
+additionalPrecautions: document.getElementById("additionalPrecautions").value,
+createdBy: user.email,
+status: "Pending Approval",
+createdAt: serverTimestamp()
+};
 
-    const permitData = {
-        permitType: "Hot Work",
-        workBy: document.getElementById("workBy").value,
-        date: document.getElementById("date").value,
-        jobNumber: document.getElementById("jobNumber").value,
-        location: document.getElementById("location").value,
-        workDescription: document.getElementById("workDescription").value,
-        performer: document.getElementById("performer").value,
-        fireWatchName: document.getElementById("fireWatchName").value,
-        authorizer: document.getElementById("authorizer").value,
-        expiryDate: document.getElementById("expiryDate").value,
-        precautions: precautions,
-        additionalPrecautions: document.getElementById("additionalPrecautions").value,
-        createdBy: user.email,
-        status: "Pending Approval",
-        createdAt: serverTimestamp()
-    };
+await addDoc(collection(db, "permits"), permitData);
 
-    await addDoc(collection(db, "permits"), permitData);
+alert("Permit submitted successfully.");
+e.target.reset();
 
-    document.getElementById("message").innerHTML =
-        "Permit submitted successfully.";
-
-    e.target.reset();
 });
 
 </script>
